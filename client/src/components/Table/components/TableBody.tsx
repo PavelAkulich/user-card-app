@@ -3,10 +3,18 @@ import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
 import TableRow from "@mui/material/TableRow";
 import Popover from "@mui/material/Popover";
-import Typography from "@mui/material/Typography";
 import IconButton from "@mui/material/IconButton";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
+import VisibilityIcon from "@mui/icons-material/Visibility";
+import DeleteIcon from "@mui/icons-material/Delete";
 import { TableRowType } from "../../../types/basicTypes";
+import {
+  Box,
+  List,
+  ListItemButton,
+  ListItemIcon,
+  ListItemText,
+} from "@mui/material";
 
 interface BaseTableBodyProps {
   rows: TableRowType[];
@@ -49,7 +57,22 @@ const BaseTableBody: FC<BaseTableBodyProps> = ({ rows }) => {
                 horizontal: "left",
               }}
             >
-              <Typography sx={{ p: 2 }}>The content of the Popover.</Typography>
+              <Box>
+                <List component="nav" aria-labelledby="nested-list-subheader">
+                  <ListItemButton>
+                    <ListItemIcon>
+                      <VisibilityIcon />
+                    </ListItemIcon>
+                    <ListItemText primary="Просмотреть" />
+                  </ListItemButton>
+                  <ListItemButton>
+                    <ListItemIcon>
+                      <DeleteIcon />
+                    </ListItemIcon>
+                    <ListItemText primary="Удалить" />
+                  </ListItemButton>
+                </List>
+              </Box>
             </Popover>
           </TableCell>
         </TableRow>
