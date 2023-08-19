@@ -14,3 +14,10 @@ export type TableCellType = {
     name: string;
     id: string;
 }
+
+export type User = {
+    name: string,
+    age: string,
+    photo: string,
+    job: string
+}

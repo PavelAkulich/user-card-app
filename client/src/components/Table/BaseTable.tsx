@@ -9,14 +9,25 @@ import { TableHeaderType, TableRowType } from "../../types/basicTypes";
 interface BaseTableProps {
   data: TableRowType[];
   headers: TableHeaderType[];
+  openMethod: (id: string) => void;
+  deleteMethod: (id: string) => void;
 }
 
-const BaseTable: FC<BaseTableProps> = ({ data, headers }) => {
+const BaseTable: FC<BaseTableProps> = ({
+  data,
+  headers,
+  openMethod,
+  deleteMethod,
+}) => {
   return (
     <TableContainer component={Paper}>
       <Table sx={{ minWidth: 650 }} size="small" aria-label="a dense table">
         <BaseTableHeader headers={headers} />
-        <BaseTableBody rows={data} />
+        <BaseTableBody
+          rows={data}
+          openMetod={openMethod}
+          deleteMethod={deleteMethod}
+        />
       </Table>
     </TableContainer>
   );

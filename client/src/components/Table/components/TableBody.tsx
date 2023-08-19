@@ -18,9 +18,11 @@ import {
 
 interface BaseTableBodyProps {
   rows: TableRowType[];
+  openMetod: (id: string) => void;
+  deleteMethod: (id: string) => void;
 }
 
-const BaseTableBody: FC<BaseTableBodyProps> = ({ rows }) => {
+const BaseTableBody: FC<BaseTableBodyProps> = ({ rows, openMetod, deleteMethod}) => {
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -59,13 +61,13 @@ const BaseTableBody: FC<BaseTableBodyProps> = ({ rows }) => {
             >
               <Box>
                 <List component="nav" aria-labelledby="nested-list-subheader">
-                  <ListItemButton>
+                  <ListItemButton onClick={() => openMetod(row.id)}>
                     <ListItemIcon>
                       <VisibilityIcon />
                     </ListItemIcon>
                     <ListItemText primary="Просмотреть" />
                   </ListItemButton>
-                  <ListItemButton>
+                  <ListItemButton onClick={() => deleteMethod(row.id)}>
                     <ListItemIcon>
                       <DeleteIcon />
                     </ListItemIcon>
