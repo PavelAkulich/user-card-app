@@ -14,6 +14,7 @@ import {
   ListItemButton,
   ListItemIcon,
   ListItemText,
+  useTheme,
 } from "@mui/material";
 import { sortDataForCells } from "../../../utils/sortDataForCells";
 
@@ -21,10 +22,16 @@ interface BaseTableBodyProps {
   rows: TableRowType[];
   openMetod: (id: string) => void;
   deleteMethod: (id: string) => void;
-  positions: string[]
+  positions: string[];
 }
 
-const BaseTableBody: FC<BaseTableBodyProps> = ({ rows, openMetod, deleteMethod, positions}) => {
+const BaseTableBody: FC<BaseTableBodyProps> = ({
+  rows,
+  openMetod,
+  deleteMethod,
+  positions,
+}) => {
+  const theme = useTheme();
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -38,7 +45,7 @@ const BaseTableBody: FC<BaseTableBodyProps> = ({ rows, openMetod, deleteMethod, 
   const open = Boolean(anchorEl);
   const id = open ? "simple-popover" : undefined;
   return (
-    <TableBody>
+    <TableBody sx={{ background: theme.palette.secondary.main }}>
       {rows.map((row) => (
         <TableRow
           key={row.id}
@@ -61,7 +68,7 @@ const BaseTableBody: FC<BaseTableBodyProps> = ({ rows, openMetod, deleteMethod, 
                 horizontal: "left",
               }}
             >
-              <Box>
+              <Box sx={{ background: theme.palette.secondary.main }}>
                 <List component="nav" aria-labelledby="nested-list-subheader">
                   <ListItemButton onClick={() => openMetod(row.id)}>
                     <ListItemIcon>
