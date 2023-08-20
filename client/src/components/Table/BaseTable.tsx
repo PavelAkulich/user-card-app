@@ -27,6 +27,7 @@ const BaseTable: FC<BaseTableProps> = ({
           rows={data}
           openMetod={openMethod}
           deleteMethod={deleteMethod}
+          positions={headers.map(item => item.name)}
         />
       </Table>
     </TableContainer>

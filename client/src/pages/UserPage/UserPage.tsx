@@ -1,62 +1,103 @@
-import { FC, useMemo, useState } from "react";
+import { FC, useMemo, useState, useEffect } from "react";
 import BaseTable from "../../components/Table/BaseTable";
-import { data } from "./mockData";
 import { convertDataToRows } from "../../utils/convertDataToRows";
-import { Container } from "@mui/material";
+import { Container, Typography, Button, Grid } from "@mui/material";
 import BaseModal from "../../components/Modal/BaseModal";
 import UserCard from "../../components/UserCard/UserCard";
 import { User } from "../../types/basicTypes";
+import { api } from "../../api";
 
 const UserPage: FC = () => {
   const [open, setOpen] = useState(false);
+  const [data, setData] = useState<User[]>([]);
   const [currentID, setCurrentId] = useState<string | undefined>(undefined);
-  const handleOpen = (id: string) => {
+
+  useEffect(() => {
+    api()
+      .user.getUserList()
+      .then((res) => {
+        setData(res);
+      });
+  }, []);
+  const headers = useMemo(
+    () => [
+      {
+        name: "id",
+        text: "ID",
+        id: "7",
+      },
+      {
+        name: "name",
+        text: "Имя",
+        id: "1",
+      },
+      {
+        name: "position",
+        text: "Должность",
+        id: "4",
+      },
+      {
+        name: "email",
+        text: "Email",
+        id: "5",
+      },
+      {
+        name: "age",
+        text: "Возраст",
+        id: "2",
+      },
+      {
+        name: "info",
+        text: "Информация",
+        id: "6",
+      },
+    ],
+    []
+  );
+  const dataTable = useMemo(() => {
+    return convertDataToRows<User>(data);
+  }, [data]);
+
+  const handleOpen = (id?: string) => {
     setCurrentId(id);
     setOpen(true);
   };
   const handleClose = () => {
     setCurrentId(undefined);
-    setOpen(false)
+    setOpen(false);
+  };
+  const refresh = () => {
+    handleClose();
+    api()
+      .user.getUserList()
+      .then((res) => {
+        setData(res);
+      });
+  };
+  const deleteMethod = (id: string) => {
+    api()
+      .user.deleteUser(id)
+      .then(() => refresh());
   };
 
-  const dataTabele = useMemo(() => {
-    return convertDataToRows<User>(data);
-  }, [data]);
-  const headers = useMemo(
-    () => [
-      {
-        name: "fio",
-        text: "fio",
-        id: "1",
-      },
-      {
-        name: "age",
-        text: "age",
-        id: "2",
-      },
-      {
-        name: "photo",
-        text: "photo",
-        id: "3",
-      },
-      {
-        name: "job",
-        text: "job",
-        id: "4",
-      },
-    ],
-    []
-  );
   return (
     <Container>
+      <Grid container justifyContent="space-between">
+        <Grid item>
+          <Typography variant="h5">Пользователи</Typography>
+        </Grid>
+        <Grid item>
+          <Button onClick={() => handleOpen()}>Добавить</Button>
+        </Grid>
+      </Grid>
       <BaseTable
-        data={dataTabele}
+        data={dataTable}
         headers={headers}
         openMethod={handleOpen}
-        deleteMethod={handleOpen}
+        deleteMethod={deleteMethod}
       />
       <BaseModal open={open} handleClose={handleClose}>
-        <UserCard id={currentID}/>
+        <UserCard id={currentID} refresh={refresh} />
       </BaseModal>
     </Container>
   );

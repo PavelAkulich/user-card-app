@@ -19,5 +19,8 @@ export type User = {
     name: string,
     age: string,
     photo: string,
-    job: string
+    position: string,
+    email: string,
+    info: string,
+    id: string,
 }

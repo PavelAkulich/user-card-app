@@ -15,14 +15,16 @@ import {
   ListItemIcon,
   ListItemText,
 } from "@mui/material";
+import { sortDataForCells } from "../../../utils/sortDataForCells";
 
 interface BaseTableBodyProps {
   rows: TableRowType[];
   openMetod: (id: string) => void;
   deleteMethod: (id: string) => void;
+  positions: string[]
 }
 
-const BaseTableBody: FC<BaseTableBodyProps> = ({ rows, openMetod, deleteMethod}) => {
+const BaseTableBody: FC<BaseTableBodyProps> = ({ rows, openMetod, deleteMethod, positions}) => {
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -42,7 +44,7 @@ const BaseTableBody: FC<BaseTableBodyProps> = ({ rows, openMetod, deleteMethod})
           key={row.id}
           sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
         >
-          {row.cells.map((cell) => (
+          {sortDataForCells(row.cells, positions).map((cell) => (
             <TableCell key={cell.name}>{cell.text}</TableCell>
           ))}
           <TableCell>

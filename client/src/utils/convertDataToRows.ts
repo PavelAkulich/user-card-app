@@ -1,12 +1,12 @@
 import { TableRowType } from "../types/basicTypes";
 
-type DefaultFataType<T> = T[];
+type DefaultDataType<T> = T[];
 
-export function convertDataToRows<DataType extends Object>(
-  data: DefaultFataType<DataType>
+export function convertDataToRows<DataType extends {id: string}>(
+  data: DefaultDataType<DataType>
 ): TableRowType[] {
-  return data.map((dt, index) => ({
-    id: index.toString(),
+  return data.map((dt) => ({
+    id: dt.id.toString(),
     cells: Object.entries(dt).map((item, ind) => ({
       name: item[0],
       text: item[1],

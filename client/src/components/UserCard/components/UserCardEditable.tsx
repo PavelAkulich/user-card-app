@@ -4,15 +4,16 @@ import { useFormik } from "formik";
 import {
   Avatar,
   Button,
-  Chip,
   Divider,
   Grid,
   TextField,
   Typography,
 } from "@mui/material";
+import { api } from "../../../api";
 
 type UserCardEditableProps = {
   user?: User;
+  refresh: () => void;
 };
 
 const avatarStyle = {
@@ -32,12 +33,12 @@ const infoStyle = {
   "&:last-child": {
     border: 0,
   },
-  "&>.MuiGrid-item:first-child>.MuiTypography-root": {
+  "&>.MuiGrid-item:first-of-type>.MuiTypography-root": {
     color: "#949494",
   },
 };
 
-const UserCardEditable: FC<UserCardEditableProps> = ({ user }) => {
+const UserCardEditable: FC<UserCardEditableProps> = ({ user, refresh }) => {
   const formik = useFormik({
     initialValues: user
       ? user
@@ -45,10 +46,20 @@ const UserCardEditable: FC<UserCardEditableProps> = ({ user }) => {
           name: "",
           job: "",
           photo: "",
+          position: "",
           age: "",
+          email: "",
+          info: "",
         },
     onSubmit: (values) => {
-      console.log(values);
+      if (user) {
+        api()
+          .user.updateUser(values, user.id)
+          .then(() => refresh());
+      } else
+        api()
+          .user.createUser(values)
+          .then(() => refresh());
     },
   });
   return (
@@ -76,29 +87,6 @@ const UserCardEditable: FC<UserCardEditableProps> = ({ user }) => {
               sx={avatarStyle}
             />
           </Grid>
-          <Grid
-            item
-            container
-            direction="row"
-            justifyContent="center"
-            alignItems="baseline"
-            gap={3}
-          >
-            <Grid>
-              <Typography variant="caption" display="block" gutterBottom>
-                Дата создания
-              </Typography>
-              <Typography variant="overline" display="block" gutterBottom>
-                19.08.2023
-              </Typography>
-            </Grid>
-            <Grid>
-              <Typography variant="caption" display="block" gutterBottom>
-                Активность
-              </Typography>
-              <Chip label="Активен" />
-            </Grid>
-          </Grid>
         </Grid>
         <Grid
           item
@@ -115,14 +103,16 @@ const UserCardEditable: FC<UserCardEditableProps> = ({ user }) => {
                 onChange={formik.handleChange}
                 name="name"
                 variant="standard"
-                sx={{'& input': { fontSize: '2.125rem'}}}
+                sx={{ "& input": { fontSize: "2.125rem" } }}
+                placeholder="Имя"
               />
               <TextField
                 fullWidth
-                value={formik.values.job}
+                value={formik.values.position}
                 onChange={formik.handleChange}
-                name="job"
+                name="position"
                 variant="standard"
+                placeholder="Должность"
               />
             </Grid>
           </Grid>
@@ -146,24 +136,34 @@ const UserCardEditable: FC<UserCardEditableProps> = ({ user }) => {
               <Typography>Email:</Typography>
             </Grid>
             <Grid item xs={9}>
-              <Typography>pavelakulic@gmail.com</Typography>
+              <TextField
+                fullWidth
+                value={formik.values.email}
+                onChange={formik.handleChange}
+                name="email"
+                variant="standard"
+              />
             </Grid>
           </Grid>
           <Grid container sx={infoStyle}>
             <Grid item xs={3}>
-              <Typography>Краткая биография:</Typography>
+              <Typography>Краткая информация:</Typography>
             </Grid>
             <Grid item xs={9}>
-              <Typography>
-                Test test Test test Test test Test test Test test Test test Test
-                test Test test Test test Test test Test test Test test Test test
-                Test test Test test Test test
-              </Typography>
+              <TextField
+                fullWidth
+                value={formik.values.info}
+                onChange={formik.handleChange}
+                name="info"
+                variant="standard"
+              />
             </Grid>
           </Grid>
         </Grid>
       </Grid>
-      <Grid container justifyContent='right'><Button>Сохранить</Button></Grid>
+      <Grid container justifyContent="right">
+        <Button onClick={() => formik.handleSubmit()}>Сохранить</Button>
+      </Grid>
     </>
   );
 };

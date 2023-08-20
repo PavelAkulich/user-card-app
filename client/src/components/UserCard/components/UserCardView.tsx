@@ -1,10 +1,11 @@
 import { FC, useState } from "react";
 import { User } from "../../../types/basicTypes";
-import { Avatar, Button, Chip, Divider, Grid, Typography } from "@mui/material";
+import { Avatar, Button, Divider, Grid, Typography } from "@mui/material";
 import UserCardEditable from "./UserCardEditable";
 
 type USerCardViewProps = {
   user: User;
+  refresh: () => void;
 };
 
 const avatarStyle = {
@@ -24,15 +25,15 @@ const infoStyle = {
   "&:last-child": {
     border: 0,
   },
-  "&>.MuiGrid-item:first-child>.MuiTypography-root": {
+  "&>.MuiGrid-item:first-of-type>.MuiTypography-root": {
     color: "#949494",
   },
 };
 
-const UserCardView: FC<USerCardViewProps> = ({ user }) => {
+const UserCardView: FC<USerCardViewProps> = ({ user, refresh }) => {
   const [isEdit, setIsEdit] = useState(false);
   return isEdit ? (
-    <UserCardEditable user={user} />
+    <UserCardEditable user={user} refresh={refresh}/>
   ) : (
     <>
       <Grid container spacing={3} sx={{ minWidth: 700 }}>
@@ -54,29 +55,6 @@ const UserCardView: FC<USerCardViewProps> = ({ user }) => {
           >
             <Avatar alt={user.name} src={user.photo} sx={avatarStyle} />
           </Grid>
-          <Grid
-            item
-            container
-            direction="row"
-            justifyContent="center"
-            alignItems="baseline"
-            gap={3}
-          >
-            <Grid>
-              <Typography variant="caption" display="block" gutterBottom>
-                Дата создания
-              </Typography>
-              <Typography variant="overline" display="block" gutterBottom>
-                19.08.2023
-              </Typography>
-            </Grid>
-            <Grid>
-              <Typography variant="caption" display="block" gutterBottom>
-                Активность
-              </Typography>
-              <Chip label="Активен" />
-            </Grid>
-          </Grid>
         </Grid>
         <Grid
           item
@@ -88,7 +66,7 @@ const UserCardView: FC<USerCardViewProps> = ({ user }) => {
           <Grid container>
             <Grid item xs={8}>
               <Typography variant="h4">{user.name}</Typography>
-              <Typography variant="button">{user.job}</Typography>
+              <Typography variant="button">{user.position}</Typography>
             </Grid>
             <Grid item xs={4}>
               <Button onClick={() => setIsEdit(true)}>Редактировать</Button>
@@ -108,19 +86,15 @@ const UserCardView: FC<USerCardViewProps> = ({ user }) => {
               <Typography>Email:</Typography>
             </Grid>
             <Grid item xs={9}>
-              <Typography>pavelakulic@gmail.com</Typography>
+              <Typography>{user.email}</Typography>
             </Grid>
           </Grid>
           <Grid container sx={infoStyle}>
             <Grid item xs={3}>
-              <Typography>Краткая биография:</Typography>
+              <Typography>Краткая информация:</Typography>
             </Grid>
             <Grid item xs={9}>
-              <Typography>
-                Test test Test test Test test Test test Test test Test test Test
-                test Test test Test test Test test Test test Test test Test test
-                Test test Test test Test test
-              </Typography>
+              <Typography>{user.info}</Typography>
             </Grid>
           </Grid>
         </Grid>

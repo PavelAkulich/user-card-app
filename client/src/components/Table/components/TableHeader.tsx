@@ -13,7 +13,7 @@ const BaseTableHeader: FC<BaseTableHeaderProps> = ({headers}) => {
   return (
     <TableHead>
       <TableRow>
-        {headers.map(header => <TableCell>{header.text}</TableCell>)}
+        {headers.map(header => <TableCell key={header.id}>{header.text}</TableCell>)}
         <TableCell>Действия</TableCell>
       </TableRow>
     </TableHead>
