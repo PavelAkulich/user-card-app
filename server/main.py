@@ -3,8 +3,11 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from database import SessionLocal, engine, Base
 from routers import user as UserRouter
+from starlette.staticfiles import StaticFiles
+
 Base.metadata.create_all(bind=engine)
 app = FastAPI()
+app.mount("/media", StaticFiles(directory="media"), name="media")
 origins = [
     "http://localhost",
     "http://localhost:5173",

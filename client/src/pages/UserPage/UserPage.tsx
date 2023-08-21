@@ -27,6 +27,12 @@ const UserPage: FC = () => {
         id: "7",
       },
       {
+        name: "photo",
+        text: "Фото",
+        type: "avatar",
+        id: "7",
+      },
+      {
         name: "name",
         text: "Имя",
         id: "1",

@@ -2,6 +2,7 @@ export type TableHeaderType = {
     text: string;
     name: string;
     id: string;
+    type?: string;
 }
 
 export type TableRowType = {

@@ -6,3 +6,4 @@ class User(BaseModel):
     position: str
     email: str
     info: str
+    photo: str

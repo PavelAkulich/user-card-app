@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, UploadFile, File
 from sqlalchemy.orm import Session
 from database import get_db
 from service import user as UserService
@@ -25,3 +25,10 @@ async def delete(id: int = None, db: Session = Depends(get_db)):
 @router.get('/list/', tags=['user'])
 async def get_list(db: Session = Depends(get_db)):
     return UserService.get_list(db)
+
+@router.post('/{id}/photo/', tags=['user'])
+async def connect_photo(id: int = None, photo: UploadFile = File(...), db: Session = Depends(get_db)):
+    file_location = f"media/{photo.filename}"
+    with open(file_location, "wb+") as file_object:
+        file_object.write(photo.file.read())
+    return UserService.connectPhoto(id, file_location, db)

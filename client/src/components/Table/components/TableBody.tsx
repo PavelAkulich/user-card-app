@@ -7,7 +7,7 @@ import IconButton from "@mui/material/IconButton";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import DeleteIcon from "@mui/icons-material/Delete";
-import { TableRowType } from "../../../types/basicTypes";
+import { TableHeaderType, TableRowType } from "../../../types/basicTypes";
 import {
   Box,
   List,
@@ -17,19 +17,20 @@ import {
   useTheme,
 } from "@mui/material";
 import { sortDataForCells } from "../../../utils/sortDataForCells";
+import CellType from "./CellType";
 
 interface BaseTableBodyProps {
   rows: TableRowType[];
   openMetod: (id: string) => void;
   deleteMethod: (id: string) => void;
-  positions: string[];
+  headers: TableHeaderType[];
 }
 
 const BaseTableBody: FC<BaseTableBodyProps> = ({
   rows,
   openMetod,
   deleteMethod,
-  positions,
+  headers,
 }) => {
   const theme = useTheme();
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
@@ -51,8 +52,8 @@ const BaseTableBody: FC<BaseTableBodyProps> = ({
           key={row.id}
           sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
         >
-          {sortDataForCells(row.cells, positions).map((cell) => (
-            <TableCell key={cell.name}>{cell.text}</TableCell>
+          {sortDataForCells(row.cells, headers.map(itm => itm.name)).map((cell, index) => (
+            <TableCell key={cell.name}><CellType type={headers[index].type}>{cell.text}</CellType></TableCell>
           ))}
           <TableCell>
             <IconButton onClick={handleClick}>

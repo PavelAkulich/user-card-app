@@ -4,7 +4,7 @@ from dto import user
 
 
 def create_user(data: user.User, db):
-    user = User(name=data.name, position=data.position, age=data.age, info=data.info, email=data.email)
+    user = User(name=data.name, position=data.position, age=data.age, info=data.info, email=data.email, photo=data.photo)
     try:
         db.add(user)
         db.commit()
@@ -28,6 +28,7 @@ def update_user(data: user.User, db, id: int):
     user.position = data.position
     user.info = data.info
     user.email = data.email
+    user.photo = ''
     db.add(user)
     db.commit()
     db.refresh(user)
@@ -37,4 +38,12 @@ def update_user(data: user.User, db, id: int):
 def delete_user(id: int, db):
     user = db.query(User).filter(User.id == id).delete()
     db.commit()
+    return user
+
+def connectPhoto(id: int, photo: str, db):
+    user = db.query(User).filter(User.id == id).first()
+    user.photo = photo
+    db.add(user)
+    db.commit()
+    db.refresh(user)
     return user

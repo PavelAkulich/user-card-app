@@ -11,11 +11,6 @@ type USerCardViewProps = {
 const avatarStyle = {
   width: 150,
   height: 150,
-  transition: "all .5s",
-  "&:hover": {
-    transform: "scale(1.1)",
-    cursor: "pointer",
-  },
 };
 
 const infoStyle = {

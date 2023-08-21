@@ -11,3 +11,4 @@ class User(Base):
     position = Column(String)
     email = Column(String, unique=True)
     info = Column(String)
+    photo = Column(String)

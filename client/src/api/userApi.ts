@@ -23,5 +23,9 @@ export const userApi = (instance: AxiosInstance) => {
       const { data } = await instance.delete<User>(`/user/${id}`);
       return data;
     },
+    async appendPhoto(id: string, formdata: FormData) {
+      const { data } = await instance.post<User>(`/user/${id}/photo/`, formdata)
+      return data
+    }
   };
 };

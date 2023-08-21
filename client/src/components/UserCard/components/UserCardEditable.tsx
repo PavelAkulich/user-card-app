@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { FC, useState, useRef, ChangeEvent } from "react";
 import { User } from "../../../types/basicTypes";
 import { useFormik } from "formik";
 import {
@@ -8,6 +8,7 @@ import {
   Grid,
   TextField,
   Typography,
+  Tooltip
 } from "@mui/material";
 import { api } from "../../../api";
 
@@ -39,12 +40,23 @@ const infoStyle = {
 };
 
 const UserCardEditable: FC<UserCardEditableProps> = ({ user, refresh }) => {
+  const [photo, setPhoto] = useState<File>();
+  const refImage = useRef<HTMLInputElement | null>(null);
+  const handleUploadClick = () => {
+    refImage.current?.click();
+  };
+
+  const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
+    if (!e.target.files) {
+      return;
+    }
+    setPhoto(e.target.files[0]);
+  };
   const formik = useFormik({
     initialValues: user
       ? user
       : {
           name: "",
-          job: "",
           photo: "",
           position: "",
           age: "",
@@ -55,11 +67,27 @@ const UserCardEditable: FC<UserCardEditableProps> = ({ user, refresh }) => {
       if (user) {
         api()
           .user.updateUser(values, user.id)
-          .then(() => refresh());
+          .then((resp) => {
+            if (photo) {
+              const formData = new FormData();
+              formData.append("photo", photo);
+              api()
+                .user.appendPhoto(resp.id, formData)
+                .then(() => refresh());
+            } else refresh();
+          });
       } else
         api()
           .user.createUser(values)
-          .then(() => refresh());
+          .then((resp) => {
+            if (photo) {
+              const formData = new FormData();
+              formData.append("photo", photo);
+              api()
+                .user.appendPhoto(resp.id, formData)
+                .then(() => refresh());
+            } else refresh();
+          });
     },
   });
   return (
@@ -81,10 +109,20 @@ const UserCardEditable: FC<UserCardEditableProps> = ({ user, refresh }) => {
             justifyContent="center"
             alignItems="baseline"
           >
-            <Avatar
-              alt={formik.values.name}
-              src={formik.values.photo}
-              sx={avatarStyle}
+            <Tooltip title="Изменить">
+              <Avatar
+                alt={formik.values.name}
+                src={photo ? URL.createObjectURL(photo) : formik.values.photo}
+                sx={avatarStyle}
+                onClick={handleUploadClick}
+              />
+            </Tooltip>
+            <input
+              type="file"
+              accept="image/*"
+              ref={refImage}
+              onChange={handleFileChange}
+              hidden
             />
           </Grid>
         </Grid>
